@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENERESCUE</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-deep: #050505;
+            --panel-bg: rgba(20, 20, 25, 0.65);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: #8b949e;
+            --color-green: #00ff88;
+            --color-blue: #00b4ff;
+            --color-yellow: #ffb800;
+            --color-orange: #ff6a00;
+            --color-red: #ff2a2a;
+            --color-purple: #b052ff;
+            --font-primary: 'Outfit', sans-serif;
+            --font-secondary: 'Inter', sans-serif;
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-secondary);
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        .app-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 0%, #1a1a2e 0%, #050505 80%);
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+        }
+
+        .glow-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: var(--color-blue);
+        }
+
+        .glow-2 {
+            bottom: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: var(--color-purple);
+        }
+
+        .glow-3 {
+            top: 40%;
+            left: 40%;
+            width: 40vw;
+            height: 40vw;
+            background: var(--color-green);
+            opacity: 0.05;
+        }
+
+        .text-green {
+            color: var(--color-green);
+        }
+
+        .text-blue {
+            color: var(--color-blue);
+        }
+
+        .text-yellow {
+            color: var(--color-yellow);
+        }
+
+        .text-orange {
+            color: var(--color-orange);
+        }
+
+        .text-red {
+            color: var(--color-red);
+        }
+
+        .text-purple {
+            color: var(--color-purple);
+        }
+
+        .col-span-2 {
+            grid-column: span 2;
+        }
+
+        .mt-auto {
+            margin-top: auto;
+        }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .sidebar {
+            width: 260px;
+            display: flex;
+            flex-direction: column;
+            margin: 15px;
+            padding: 0;
+            border-radius: var(--border-radius);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .logo-icon {
+            font-size: 24px;
+            color: var(--color-blue);
+            background: rgba(0, 180, 255, 0.1);
+            padding: 12px;
+            border-radius: 12px;
+            margin-right: 12px;
+            box-shadow: 0 0 15px rgba(0, 180, 255, 0.2);
+        }
+
+        .logo-text h1 {
+            font-family: var(--font-primary);
+            font-size: 15px;
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .logo-text h1 span {
+            color: var(--color-blue);
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .nav-menu {
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 12px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            gap: 10px;
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        .nav-item:hover i {
+            color: var(--color-blue);
+        }
+
+        .nav-item.active {
+            background: rgba(0, 180, 255, 0.15);
+            color: #fff;
+            border: 1px solid rgba(0, 180, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 180, 255, 0.1);
+        }
+
+        .nav-item.active i {
+            color: var(--color-blue);
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid var(--panel-border);
+        }
+
+        .btn-refresh {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(0, 180, 255, 0.2), rgba(0, 255, 136, 0.2));
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--text-main);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-refresh:hover {
+            background: linear-gradient(135deg, rgba(0, 180, 255, 0.3), rgba(0, 255, 136, 0.3));
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px 20px 15px 5px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+        }
+
+        .header-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .pulse-green {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--color-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .bg-blue {
+            background: rgba(0, 180, 255, 0.15);
+            color: var(--color-blue);
+        }
+
+        .bg-green {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--color-green);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+            }
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-text .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+
+        .header-text strong {
+            font-size: 16px;
+            font-weight: 700;
+            font-family: var(--font-primary);
+        }
+
+        .status-normal {
+            color: var(--color-green);
+        }
+
+        .status-critical {
+            color: var(--color-red);
+        }
+
+        .view-section {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        .view-section.active-view {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .view-header h2 {
+            font-family: var(--font-primary);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .view-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .dashboard-panel {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+        }
+
+        .gauges-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .gauge-card {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .card-header {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .gauge-container.semi-circle {
+            width: 140px;
+            height: 70px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gauge-fill {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: 12px solid transparent;
+            transform: rotate(-45deg);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #voltage-fill {
+            border-bottom-color: var(--color-green);
+            border-left-color: var(--color-green);
+        }
+
+        #current-fill {
+            border-bottom-color: var(--color-yellow);
+            border-left-color: var(--color-yellow);
+        }
+
+        #temp-fill {
+            border-bottom-color: var(--color-orange);
+            border-left-color: var(--color-orange);
+        }
+
+        .gauge-mask {
+            display: none;
+        }
+
+        .gauge-value {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .gauge-value span:first-child {
+            font-family: var(--font-primary);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .gauge-value .unit {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: 2px;
+        }
+
+        .badge-green {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--color-green);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .gauge-container.full-circle {
+            width: 110px;
+            height: 110px;
+            position: relative;
+        }
+
+        .circular-chart {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 3;
+        }
+
+        .circle {
+            fill: none;
+            stroke: var(--color-green);
+            stroke-width: 4;
+            stroke-linecap: round;
+            transition: stroke-dasharray 1s ease;
+        }
+
+        .gauge-value.centered {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .gauge-value.centered span:first-child {
+            font-size: 26px;
+        }
+
+        .batt-body {
+            width: 50px;
+            height: 20px;
+            border: 2px solid var(--text-muted);
+            border-radius: 4px;
+            padding: 2px;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .batt-body::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 4px;
+            width: 3px;
+            height: 8px;
+            background: var(--text-muted);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .batt-level {
+            height: 100%;
+            background: var(--color-green);
+            width: 0%;
+            transition: width 0.8s ease;
+        }
+
+        .power-value-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .main-power {
+            font-family: var(--font-primary);
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--color-blue);
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(0, 180, 255, 0.4);
+        }
+
+        .sparkline-container.large {
+            width: 100%;
+            height: 60px;
+        }
+
+        .sparkline-container {
+            width: 100%;
+            height: 50px;
+        }
+
+        .loads-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .loads-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100%;
+        }
+
+        .load-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            width: 30%;
+            transition: var(--transition);
+        }
+
+        .load-item.on {
+            border-color: rgba(0, 255, 136, 0.3);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .load-item.off {
+            opacity: 0.6;
+        }
+
+        .load-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--text-muted);
+        }
+
+        .load-item.on .load-icon {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--color-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .load-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .load-state-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+        }
+
+        .load-item.on .load-state-badge {
+            background: var(--color-green);
+            color: #000;
+        }
+
+        .trends-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .alerts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .alert-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--color-green);
+        }
+
+        .alert-icon {
+            font-size: 20px;
+            color: var(--color-green);
+        }
+
+        .alert-content strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .alert-content p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .alert-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .backup-dial {
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin: auto;
+        }
+
+        .circular-chart-blue .circle {
+            fill: none;
+            stroke: var(--color-blue);
+            stroke-width: 4;
+            stroke-linecap: round;
+        }
+
+        .backup-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .backup-value i {
+            font-size: 16px;
+            color: var(--color-blue);
+            margin-bottom: 5px;
+        }
+
+        .backup-value strong {
+            font-family: var(--font-primary);
+            font-size: 36px;
+            color: var(--text-main);
+            line-height: 1;
+        }
+
+        .backup-value span {
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .backup-desc {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            padding: 0 20px;
+            min-height: 120px;
+        }
+
+        .flow-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 10px;
+        }
+
+        .flow-node i {
+            font-size: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 16px;
+        }
+
+        .flow-node span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .flow-node .flow-val {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            font-family: var(--font-primary);
+        }
+
+        .animated-arrow {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 24px;
+            animation: moveRight 2s linear infinite;
+        }
+
+        @keyframes moveRight {
+            0% {
+                transform: translateX(-10px);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(10px);
+                opacity: 0;
+            }
+        }
+
+        /* Health Panel */
+        .health-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .health-content i {
+            font-size: 48px;
+            color: var(--color-green);
+            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.3));
+        }
+
+        .health-text strong {
+            font-family: var(--font-primary);
+            font-size: 36px;
+            display: block;
+            line-height: 1;
+        }
+
+        .health-text span {
+            color: var(--color-green);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Sys Info */
+        .info-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-list li:last-child {
+            border: none;
+        }
+
+        .info-list i {
+            width: 24px;
+            color: var(--color-blue);
+            font-size: 16px;
+        }
+
+        .info-list .val {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .highlight-blue {
+            color: var(--color-blue) !important;
+            font-size: 16px;
+            font-family: var(--font-primary);
+        }
+
+        /* Raw data debug */
+        .raw-data-box {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            word-break: break-all;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        /* Light Theme Overrides */
+        body.light-mode {
+            --bg-deep: #f0f2f5;
+            --panel-bg: rgba(255, 255, 255, 0.8);
+            --panel-border: rgba(0, 0, 0, 0.1);
+            --text-main: #1a1a2e;
+            --text-muted: #5c6bc0;
+        }
+
+        body.light-mode .app-background {
+            background: radial-gradient(circle at 50% 0%, #ffffff 0%, #e0e5ec 80%);
+        }
+
+        body.light-mode .gauge-mask {
+            background-color: #f0f2f5;
+        }
+
+        body.light-mode .load-item {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        body.light-mode .load-state-badge {
+            background: rgba(0, 0, 0, 0.05);
+            color: #000;
+        }
+
+        /* Settings Form Styles */
+        .settings-group {
+            margin-bottom: 25px;
+        }
+
+        .settings-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .settings-group label:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--panel-border);
+        }
+
+        .setting-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .setting-text strong {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .setting-text span {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 3px;
+            background-color: var(--text-muted);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.4);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(22px);
+            background-color: var(--color-green);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Profile Styles */
+        .profile-card {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 20px;
+            margin-bottom: 10px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(0, 180, 255, 0.15);
+            color: var(--color-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 0 20px rgba(0, 180, 255, 0.2);
+        }
+
+        .profile-title h3 {
+            font-family: var(--font-primary);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .profile-title p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .profile-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .profile-form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .profile-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-family: var(--font-secondary);
+            font-size: 14px;
+            transition: var(--transition);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .profile-input:focus {
+            outline: none;
+            border-color: var(--color-blue);
+            box-shadow: 0 0 10px rgba(0, 180, 255, 0.2);
+        }
+
+        .profile-input:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(0, 180, 255, 0.2), rgba(0, 180, 255, 0.4));
+            border: 1px solid rgba(0, 180, 255, 0.5);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            width: fit-content;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, rgba(0, 180, 255, 0.3), rgba(0, 180, 255, 0.6));
+            box-shadow: 0 0 15px rgba(0, 180, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            width: fit-content;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        body.light-mode .profile-input {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--text-main);
+        }
+
+        @media (max-width: 1400px) {
+            .gauges-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .power-card {
+                grid-column: span 3;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-background">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+        <div class="glow glow-3"></div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar glass-panel">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+                <div class="logo-text">
+                    <h1>ENERESCUE</h1>
+                    <p>IoT Monitoring Hub</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-target="dashboard-view"><i class="fa-solid fa-house"></i>
+                    Overview</a>
+                <a href="#" class="nav-item" data-target="power-view"><i class="fa-solid fa-chart-line"></i> Power
+                    Monitor</a>
+                <a href="#" class="nav-item" data-target="profile-view"><i class="fa-solid fa-user"></i> Profile</a>
+                <a href="#" class="nav-item" data-target="trends-view"><i class="fa-solid fa-chart-pie"></i> Data
+                    Trends</a>
+                <a href="#" class="nav-item" data-target="settings-view"><i class="fa-solid fa-gear"></i> Settings</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-refresh" onclick="window.fetchData()">
+                    <i class="fa-solid fa-rotate"></i> Sync Data
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header glass-panel">
+                <div class="header-section">
+                    <div class="icon-circle pulse-green"><i class="fa-solid fa-shield-check"></i></div>
+                    <div class="header-text">
+                        <span class="label">SYSTEM STATUS</span>
+                        <strong id="system-status-text" class="status-normal">ONLINE & SECURE</strong>
+                    </div>
+                </div>
+                <div class="header-section">
+                    <div class="icon-circle bg-blue"><i class="fa-regular fa-clock"></i></div>
+                    <div class="header-text">
+                        <span class="label">LAST SYNC</span>
+                        <strong id="last-updated-time">--:--:--</strong>
+                        <span id="last-updated-date" style="font-size:11px;color:var(--text-muted);">--/--/----</span>
+                    </div>
+                </div>
+                <div class="header-section">
+                    <div class="icon-circle bg-green"><i class="fa-solid fa-wifi"></i></div>
+                    <div class="header-text">
+                        <span class="label">NETWORK</span>
+                        <strong style="color:var(--color-green)">Connected (AWS IoT)</strong>
+                    </div>
+                </div>
+            </header>
+
+            <!-- VIEW 1: OVERVIEW -->
+            <div id="dashboard-view" class="view-section active-view">
+                <div class="view-header">
+                    <h2>System Overview</h2>
+                    <p>High-level health and power flow summary.</p>
+                </div>
+                <div class="overview-grid">
+                    <section class="dashboard-panel glass-panel">
+                        <h3 class="panel-title">SYSTEM HEALTH</h3>
+                        <div class="health-content">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                            <div class="health-text">
+                                <strong>100%</strong>
+                                <span>Optimal Operation</span>
+                            </div>
+                        </div>
+                        <div class="sparkline-container mt-auto">
+                            <canvas id="healthSparkline"></canvas>
+                        </div>
+                    </section>
+
+                    <section class="dashboard-panel glass-panel col-span-2" style="min-height:160px;">
+                        <h3 class="panel-title">LIVE POWER FLOW</h3>
+                        <div class="flow-diagram">
+                            <div class="flow-node">
+                                <i class="fa-solid fa-solar-panel text-yellow"></i>
+                                <div class="flow-val" id="flow-voltage">--V</div>
+                                <span>SOURCE</span>
+                            </div>
+                            <div class="animated-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                            <div class="flow-node">
+                                <i class="fa-solid fa-battery-full text-green"></i>
+                                <div class="flow-val" id="flow-batt">--%</div>
+                                <span>BATTERY</span>
+                            </div>
+                            <div class="animated-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                            <div class="flow-node">
+                                <i class="fa-solid fa-microchip text-blue"></i>
+                                <div class="flow-val" id="flow-power">--W</div>
+                                <span>CONTROLLER</span>
+                            </div>
+                            <div class="animated-arrow"><i class="fa-solid fa-angles-right"></i></div>
+                            <div class="flow-node">
+                                <i class="fa-solid fa-plug text-purple"></i>
+                                <div class="flow-val" id="flow-loads">LOADS</div>
+                                <span>OUTPUT</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="dashboard-panel glass-panel">
+                        <h3 class="panel-title">HARDWARE INFO</h3>
+                        <ul class="info-list">
+                            <li>
+                                <span><i class="fa-solid fa-bolt"></i> Voltage</span>
+                                <span class="val highlight-blue" id="info-voltage">--</span>
+                            </li>
+                            <li>
+                                <span><i class="fa-solid fa-wave-square"></i> Current</span>
+                                <span class="val" id="info-current">--</span>
+                            </li>
+                            <li>
+                                <span><i class="fa-solid fa-fire"></i> Power</span>
+                                <span class="val" id="info-total-load">--</span>
+                            </li>
+                            <li>
+                                <span><i class="fa-solid fa-temperature-half"></i> Temp</span>
+                                <span class="val" id="info-temp">--</span>
+                            </li>
+                            <li>
+                                <span><i class="fa-solid fa-clock"></i> Timestamp</span>
+                                <span class="val" id="info-timestamp" style="font-size:11px;">--</span>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+
+            <!-- VIEW 2: POWER MONITOR -->
+            <div id="power-view" class="view-section">
+                <div class="view-header">
+                    <h2>Power Monitor</h2>
+                    <p>Real-time telemetry and battery analytics.</p>
+                </div>
+                <div class="gauges-grid">
+                    <div class="gauge-card glass-panel">
+                        <div class="card-header text-green"><i class="fa-solid fa-bolt"></i> VOLTAGE</div>
+                        <div class="gauge-container semi-circle">
+                            <div class="gauge-fill" id="voltage-fill"></div>
+                            <div class="gauge-mask"></div>
+                            <div class="gauge-value">
+                                <span id="voltage-val">0.00</span><span class="unit">V</span>
+                            </div>
+                        </div>
+                        <div class="badge-green">Stable</div>
+                    </div>
+
+                    <div class="gauge-card glass-panel">
+                        <div class="card-header text-yellow"><i class="fa-solid fa-bolt"></i> CURRENT</div>
+                        <div class="gauge-container semi-circle">
+                            <div class="gauge-fill" id="current-fill"></div>
+                            <div class="gauge-mask"></div>
+                            <div class="gauge-value">
+                                <span id="current-val">0.00</span><span class="unit">A</span>
+                            </div>
+                        </div>
+                        <div class="badge-green">Normal</div>
+                    </div>
+
+                    <div class="gauge-card glass-panel power-card col-span-2">
+                        <div class="card-header text-blue"><i class="fa-solid fa-wave-square"></i> ACTIVE POWER</div>
+                        <div class="power-value-container">
+                            <div class="main-power" id="power-val">0.00</div>
+                            <div class="unit"
+                                style="color:var(--text-muted);font-size:12px;letter-spacing:2px;margin-top:4px;">WATTS
+                            </div>
+                        </div>
+                        <div class="sparkline-container large">
+                            <canvas id="powerSparkline"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="gauge-card glass-panel">
+                        <div class="card-header text-orange"><i class="fa-solid fa-temperature-half"></i> TEMP</div>
+                        <div class="gauge-container semi-circle">
+                            <div class="gauge-fill" id="temp-fill"></div>
+                            <div class="gauge-mask"></div>
+                            <div class="gauge-value">
+                                <span id="temp-val">0.0</span><span class="unit">°C</span>
+                            </div>
+                        </div>
+                        <div class="badge-green">Safe</div>
+                    </div>
+
+                    <div class="gauge-card glass-panel">
+                        <div class="card-header text-green"><i class="fa-solid fa-battery-full"></i> BATTERY STATE</div>
+                        <div class="gauge-container full-circle">
+                            <svg viewBox="0 0 100 100" class="circular-chart">
+                                <path class="circle-bg" d="M18 50 a 32 32 0 1 1 64 0 a 32 32 0 1 1 -64 0" />
+                                <path class="circle" id="battery-circle" stroke-dasharray="0, 200"
+                                    d="M18 50 a 32 32 0 1 1 64 0 a 32 32 0 1 1 -64 0" />
+                            </svg>
+                            <div class="gauge-value centered">
+                                <span id="battery-val">0</span><span class="unit">%</span>
+                            </div>
+                        </div>
+                        <div class="batt-body">
+                            <div class="batt-level" id="batt-level-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 3: PROFILE -->
+            <div id="profile-view" class="view-section">
+                <div class="view-header">
+                    <h2>User Profile</h2>
+                    <p>Manage your account details and alert settings.</p>
+                </div>
+                <div class="dashboard-panel glass-panel profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+                        <div class="profile-title">
+                            <h3 id="display-username">John Doe</h3>
+                            <p id="display-email">admin@enerescue.com</p>
+                        </div>
+                    </div>
+
+                    <form id="profile-form">
+                        <div class="profile-form-group">
+                            <label for="input-username">Username</label>
+                            <input type="text" id="input-username" class="profile-input"
+                                placeholder="Enter your username" disabled>
+                        </div>
+                        <div class="profile-form-group">
+                            <label for="input-email">Email Address</label>
+                            <input type="email" id="input-email" class="profile-input"
+                                placeholder="Enter your email for alerts" disabled>
+                        </div>
+                        <div class="profile-form-group">
+                            <label for="input-mobile">Mobile Number</label>
+                            <input type="tel" id="input-mobile" class="profile-input"
+                                placeholder="Enter your mobile number" disabled>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" id="btn-edit-profile" class="btn-primary"><i
+                                    class="fa-solid fa-pen"></i> Edit Profile</button>
+                            <button type="submit" id="btn-save-profile" class="btn-primary" style="display: none;"><i
+                                    class="fa-solid fa-check"></i> Save Changes</button>
+                            <button type="button" id="btn-cancel-profile" class="btn-secondary"
+                                style="display: none;">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- VIEW 4: TRENDS -->
+            <div id="trends-view" class="view-section">
+                <div class="view-header">
+                    <h2>Data Trends & Alerts</h2>
+                    <p>Historical charting and system notifications.</p>
+                </div>
+                <div class="trends-grid">
+                    <section class="dashboard-panel glass-panel col-span-2">
+                        <h3 class="panel-title">TELEMETRY TIMELINE</h3>
+                        <div style="height: 350px; position:relative;">
+                            <canvas id="trendsChart"></canvas>
+                        </div>
+                    </section>
+                    <section class="dashboard-panel glass-panel">
+                        <h3 class="panel-title text-red">NOTIFICATIONS</h3>
+                        <div class="alerts-list" id="alerts-container">
+                            <div class="alert-item">
+                                <div class="alert-icon"><i class="fa-solid fa-circle-check"></i></div>
+                                <div class="alert-content">
+                                    <strong>System OK</strong>
+                                    <p>Waiting for first sync...</p>
+                                </div>
+                                <div class="alert-time" id="alert-time-val">--</div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- VIEW 5: SETTINGS -->
+            <div id="settings-view" class="view-section">
+                <div class="view-header">
+                    <h2>Dashboard Settings</h2>
+                    <p>Customize your viewing experience.</p>
+                </div>
+                <div class="trends-grid">
+                    <section class="dashboard-panel glass-panel">
+                        <h3 class="panel-title">APPEARANCE & UNITS</h3>
+                        <div class="settings-group">
+                            <label>
+                                <div class="setting-text">
+                                    <strong>Light Mode</strong>
+                                    <span>Switch to a brighter interface</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="setting-theme">
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                            <label>
+                                <div class="setting-text">
+                                    <strong>Use Fahrenheit (°F)</strong>
+                                    <span>Display temperature in Fahrenheit</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="setting-units">
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                        </div>
+                    </section>
+
+                    <section class="dashboard-panel glass-panel">
+                        <h3 class="panel-title">WIDGET VISIBILITY</h3>
+                        <div class="settings-group">
+                            <label>
+                                <div class="setting-text">
+                                    <strong>Power Graph</strong>
+                                    <span>Show the active power sparkline chart</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="setting-widget-power" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                            <label>
+                                <div class="setting-text">
+                                    <strong>Battery Widget</strong>
+                                    <span>Show the detailed battery visualizer</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="setting-widget-battery" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                            <label>
+                                <div class="setting-text">
+                                    <strong>Alerts List</strong>
+                                    <span>Show system notifications panel</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="setting-widget-alerts" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("Premium Dashboard JS Initialized");
+
+            // ── PROFILE STATE ───────────────────────────────────────────
+            const defaultProfile = { username: "Admin User", email: "admin@enerescue.com", mobile: "+1 234 567 8900" };
+            let userProfile = JSON.parse(localStorage.getItem('enerescueProfile')) || defaultProfile;
+
+            // ── CONFIG ──────────────────────────────────────────────────
+            const API_URL = "https://cf0uiacmdd.execute-api.ap-south-1.amazonaws.com/product/getData";
+            const API_KEY = "Qr2pR9YMGp2f0ChTfSD3K21gmXxJ13e04BcILIqc";
+            const FETCH_INTERVAL_MS = 5000;
+
+            // Voltage range for battery estimation (adjust to your battery spec)
+            const BATT_VOLTAGE_MIN = 11.0;   // 0% battery voltage
+            const BATT_VOLTAGE_MAX = 14.4;   // 100% battery voltage
+            const MAX_BACKUP_HRS = 5;      // Maximum estimated backup hours
+
+            // ── CHART STATE ─────────────────────────────────────────────
+            let trendsChart, powerSparkline, healthSparkline;
+            const maxPoints = 20;
+            const chartLabels = [], vData = [], cData = [], tData = [], pData = [], hData = [];
+
+            const themeColors = {
+                green: '#00ff88', blue: '#00b4ff', yellow: '#ffb800',
+                orange: '#ff6a00', red: '#ff2a2a', grid: 'rgba(255,255,255,0.05)', text: '#8b949e'
+            };
+
+            // ── CHART INIT ───────────────────────────────────────────────
+            function initCharts() {
+                Chart.defaults.color = themeColors.text;
+                Chart.defaults.font.family = "'Inter', sans-serif";
+
+                const ctxTrends = document.getElementById('trendsChart');
+                if (ctxTrends) {
+                    trendsChart = new Chart(ctxTrends, {
+                        type: 'line',
+                        data: {
+                            labels: chartLabels,
+                            datasets: [
+                                { label: 'Voltage (V)', data: vData, borderColor: themeColors.green, backgroundColor: 'rgba(0,255,136,0.1)', tension: 0.4, fill: true },
+                                { label: 'Current (A)', data: cData, borderColor: themeColors.yellow, tension: 0.4 },
+                                { label: 'Temp (°C)', data: tData, borderColor: themeColors.orange, tension: 0.4 }
+                            ]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            scales: {
+                                x: { grid: { color: themeColors.grid } },
+                                y: { grid: { color: themeColors.grid } }
+                            },
+                            plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } } }
+                        }
+                    });
+                }
+
+                const ctxPower = document.getElementById('powerSparkline');
+                if (ctxPower) {
+                    powerSparkline = new Chart(ctxPower, {
+                        type: 'line',
+                        data: { labels: chartLabels, datasets: [{ data: pData, borderColor: themeColors.blue, borderWidth: 2, tension: 0.3, pointRadius: 0 }] },
+                        options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } }, responsive: true, maintainAspectRatio: false }
+                    });
+                }
+
+                const ctxHealth = document.getElementById('healthSparkline');
+                if (ctxHealth) {
+                    healthSparkline = new Chart(ctxHealth, {
+                        type: 'line',
+                        data: { labels: chartLabels, datasets: [{ data: hData, borderColor: themeColors.green, borderWidth: 2, tension: 0.4, pointRadius: 0 }] },
+                        options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, responsive: true, maintainAspectRatio: false }
+                    });
+                }
+            }
+
+            // ── NAV ROUTING ──────────────────────────────────────────────
+            const navItems = document.querySelectorAll('.nav-item');
+            const views = document.querySelectorAll('.view-section');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = item.getAttribute('data-target');
+                    navItems.forEach(n => n.classList.remove('active'));
+                    item.classList.add('active');
+                    views.forEach(v => {
+                        v.classList.remove('active-view');
+                        if (v.id === targetId) v.classList.add('active-view');
+                    });
+                    setTimeout(() => {
+                        if (trendsChart) trendsChart.resize();
+                        if (powerSparkline) powerSparkline.resize();
+                        if (healthSparkline) healthSparkline.resize();
+                    }, 50);
+                });
+            });
+
+            // ── DATA HELPERS ─────────────────────────────────────────────
+            /**
+             * FIX 1: getVal() now handles BOTH DynamoDB typed format {N:"30"} / {S:"ON"}
+             * AND plain JSON format where values are already numbers/strings.
+             */
+            function getVal(field) {
+                if (field === undefined || field === null) return 0;
+                // DynamoDB typed format
+                if (typeof field === "object") {
+                    if (field.N !== undefined) return parseFloat(field.N);
+                    if (field.S !== undefined) return field.S;
+                    if (field.BOOL !== undefined) return field.BOOL;
+                }
+                // Plain JSON — number or string already
+                return field;
+            }
+
+            /**
+             * FIX 2: Sort items by timestamp descending to always get the LATEST record.
+             */
+            function getLatestItem(items) {
+                if (!Array.isArray(items) || items.length === 0) return null;
+                if (items.length === 1) return items[0];
+
+                return items.slice().sort((a, b) => {
+                    const tsA = String(getVal(a.timestamp) || "");
+                    const tsB = String(getVal(b.timestamp) || "");
+                    // ISO strings sort lexicographically correctly
+                    return tsB.localeCompare(tsA);
+                })[0];
+            }
+
+            function updateSemiCircleGauge(id, value, max) {
+                const percent = Math.min(Math.max(value / max, 0), 1);
+                const degrees = -45 + (percent * 180);
+                const el = document.getElementById(id);
+                if (el) el.style.transform = `rotate(${degrees}deg)`;
+            }
+
+            function updateLoadStatus(id, status) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const isOn = (status === "ON" || status === "1" || status === 1 || status === true);
+                if (isOn) {
+                    el.classList.add('on');
+                    el.classList.remove('off');
+                    el.querySelector('.load-state-badge').innerText = 'ON';
+                } else {
+                    el.classList.remove('on');
+                    el.classList.add('off');
+                    el.querySelector('.load-state-badge').innerText = 'OFF';
+                }
+            }
+
+            function setText(id, val) {
+                const el = document.getElementById(id);
+                if (el) el.innerText = val;
+            }
+
+            function updateCharts(v, c, t, p, label) {
+                chartLabels.push(label);
+                vData.push(v); cData.push(c); tData.push(t); pData.push(p);
+                hData.push(100 - Math.random() * 2);
+
+                if (chartLabels.length > maxPoints) {
+                    chartLabels.shift(); vData.shift(); cData.shift();
+                    tData.shift(); pData.shift(); hData.shift();
+                }
+                if (trendsChart) trendsChart.update('none');
+                if (powerSparkline) powerSparkline.update('none');
+                if (healthSparkline) healthSparkline.update('none');
+            }
+
+            // ── FETCH ────────────────────────────────────────────────────
+            async function fetchData() {
+                try {
+                    const res = await fetch(API_URL, {
+                        method: "GET",
+                        mode: "cors",                          // FIX 3: explicit CORS mode
+                        headers: {
+                            "x-api-key": API_KEY,
+                            "Accept": "application/json"
+                        }
+                    });
+
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                    let raw = await res.json();
+
+                    // Unwrap Lambda proxy response if needed
+                    if (raw && raw.body) raw = JSON.parse(raw.body);
+                    if (!Array.isArray(raw)) raw = [raw];
+                    if (raw.length === 0) throw new Error("Empty response array");
+
+                    // FIX 2: pick the record with the latest timestamp
+                    const item = getLatestItem(raw);
+                    if (!item) throw new Error("No valid item found");
+
+                    // Parse all fields — works for both plain JSON and DynamoDB typed format
+                    const voltage = parseFloat(getVal(item.voltage)) || 0;
+                    const current = parseFloat(getVal(item.current)) || 0;
+                    const power = parseFloat(getVal(item.power)) || 0;
+                    let temp = parseFloat(getVal(item.temperature)) || 0;
+                    const relay1 = getVal(item.relay1_status);
+
+                    // Unit Conversion
+                    const useF = document.getElementById('setting-units') && document.getElementById('setting-units').checked;
+                    if (useF) {
+                        temp = (temp * 9 / 5) + 32;
+                    }
+                    const tempUnit = useF ? '°F' : '°C';
+                    const tempMax = useF ? 176 : 80;
+                    const relay2 = getVal(item.relay2_status);
+                    const relay3 = getVal(item.relay3_status);
+                    const rawTime = String(getVal(item.timestamp) || "");
+
+                    // Parse timestamp
+                    let timeStr = "--:--:--", dateStr = "--/--/----";
+                    if (rawTime) {
+                        const dateObj = new Date(rawTime);
+                        if (!isNaN(dateObj.getTime())) {
+                            timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                            dateStr = dateObj.toLocaleDateString();
+                        } else {
+                            // Try treating as a plain time string already
+                            timeStr = rawTime;
+                        }
+                    }
+
+                    // ── Header ──
+                    setText('last-updated-time', timeStr);
+                    setText('last-updated-date', dateStr);
+                    setText('alert-time-val', timeStr);
+
+                    const statusEl = document.getElementById('system-status-text');
+                    if (statusEl) {
+                        statusEl.innerText = "ONLINE & SECURE";
+                        statusEl.className = "status-normal";
+                    }
+
+                    // ── Overview ──
+                    setText('info-voltage', voltage.toFixed(2) + " V");
+                    setText('info-current', current.toFixed(2) + " A");
+                    setText('info-total-load', power.toFixed(2) + " W");
+                    setText('info-temp', temp.toFixed(1) + " " + tempUnit);
+                    setText('info-timestamp', rawTime.slice(0, 19).replace('T', ' ') || timeStr);
+
+                    // Flow diagram
+                    setText('flow-voltage', voltage.toFixed(1) + "V");
+                    setText('flow-power', power.toFixed(0) + "W");
+
+                    // ── Power Monitor ──
+                    setText('voltage-val', voltage.toFixed(2));
+                    setText('current-val', current.toFixed(2));
+                    setText('power-val', power.toFixed(2));
+                    setText('temp-val', temp.toFixed(1));
+
+                    const tempUnitEl = document.querySelector('#temp-val').nextElementSibling;
+                    if (tempUnitEl) tempUnitEl.innerText = tempUnit;
+
+                    updateSemiCircleGauge('voltage-fill', voltage, 40);  // adjust max for your system
+                    updateSemiCircleGauge('current-fill', current, 20);
+                    updateSemiCircleGauge('temp-fill', temp, tempMax);
+
+                    // FIX 3: Battery % from voltage range (instead of voltage * 8)
+                    const battery = Math.min(100, Math.max(0,
+                        ((voltage - BATT_VOLTAGE_MIN) / (BATT_VOLTAGE_MAX - BATT_VOLTAGE_MIN)) * 100
+                    ));
+                    setText('battery-val', battery.toFixed(0));
+                    setText('flow-batt', battery.toFixed(0) + '%');
+
+                    const battCircle = document.getElementById('battery-circle');
+                    if (battCircle) battCircle.style.strokeDasharray = `${(battery / 100) * 200},200`;
+
+                    const battLevel = document.getElementById('batt-level-fill');
+                    if (battLevel) battLevel.style.width = `${battery}%`;
+
+                    // ── Loads (Removed from View, but flow-loads text is kept for Overview) ──
+                    const activeRelays = [relay1, relay2, relay3].filter(r =>
+                        r === "ON" || r === 1 || r === true || r === "1"
+                    ).length;
+                    setText('flow-loads', `${activeRelays}/3 ON`);
+
+                    // ── System Health & Email Alert ──
+                    let isCritical = (battery < 20);
+                    const healthScore = isCritical ? Math.max(0, battery) : 100;
+                    const healthStr = isCritical ? "Critical" : "Optimal Operation";
+
+                    document.querySelector('.health-text strong').innerText = healthScore.toFixed(0) + '%';
+                    document.querySelector('.health-text span').innerText = healthStr;
+
+                    const statusText = document.getElementById('system-status-text');
+                    if (statusText) {
+                        statusText.innerText = isCritical ? "CRITICAL ALERT" : "ONLINE & SECURE";
+                        statusText.className = isCritical ? "status-critical" : "status-normal";
+                    }
+
+                    if (isCritical) {
+                        const lastAlertTime = parseInt(localStorage.getItem('enerescueLastEmailAlert') || "0");
+                        const now = Date.now();
+                        if (now - lastAlertTime > 3600000) {
+                            console.log("CRITICAL HEALTH: Triggering email warning...");
+                            const emailBody = `WARNING: System Health is Critical! Battery is at ${battery.toFixed(1)}%. Voltage: ${voltage.toFixed(2)}V.`;
+                            const subject = "Enerescue System Critical Alert";
+                            window.location.href = `mailto:${userProfile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+
+                            const alertsContainer = document.getElementById('alerts-container');
+                            if (alertsContainer) {
+                                alertsContainer.insertAdjacentHTML('afterbegin', `
+                     <div class="alert-item" style="border-left-color: var(--color-red);">
+                        <div class="alert-icon" style="color: var(--color-red);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="alert-content">
+                           <strong>Email Warning Sent</strong>
+                           <p>Critical health alert sent to ${userProfile.email}</p>
+                        </div>
+                        <div class="alert-time">${timeStr}</div>
+                     </div>
+                   `);
+                            }
+                            localStorage.setItem('enerescueLastEmailAlert', now.toString());
+                        }
+                    }
+
+                    // ── Charts ──
+                    updateCharts(voltage, current, temp, power, timeStr);
+
+                    // ── Alert ──
+                    const alertsContainer = document.getElementById('alerts-container');
+                    if (alertsContainer && !isCritical) {
+                        alertsContainer.innerHTML = `
+                        <div class="alert-item">
+                            <div class="alert-icon"><i class="fa-solid fa-circle-check"></i></div>
+                            <div class="alert-content">
+                                <strong>Sync Successful</strong>
+                                <p>Latest: ${voltage.toFixed(2)}V | ${current.toFixed(2)}A | ${power.toFixed(2)}W | ${temp.toFixed(1)}${tempUnit}</p>
+                            </div>
+                            <div class="alert-time">${timeStr}</div>
+                        </div>`;
+                    }
+
+                } catch (err) {
+                    console.error("Fetch Error:", err);
+                    const statusEl = document.getElementById('system-status-text');
+                    if (statusEl) {
+                        statusEl.innerText = "OFFLINE — " + err.message;
+                        statusEl.className = "status-critical";
+                    }
+
+                    const alertsContainer = document.getElementById('alerts-container');
+                    if (alertsContainer) {
+                        alertsContainer.innerHTML = `
+                        <div class="alert-item" style="border-left-color:var(--color-red)">
+                            <div class="alert-icon" style="color:var(--color-red)"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                            <div class="alert-content">
+                                <strong>Sync Failed</strong>
+                                <p>${err.message}</p>
+                            </div>
+                            <div class="alert-time">Just now</div>
+                        </div>`;
+                    }
+                }
+            }
+
+            window.fetchData = fetchData;
+
+            initCharts();
+            fetchData();
+            setInterval(fetchData, FETCH_INTERVAL_MS);
+
+            // ── PROFILE UI LOGIC ─────────────────────────────────────────
+            const displayUsername = document.getElementById('display-username');
+            const displayEmail = document.getElementById('display-email');
+            const inputUsername = document.getElementById('input-username');
+            const inputEmail = document.getElementById('input-email');
+            const inputMobile = document.getElementById('input-mobile');
+            const btnEditProfile = document.getElementById('btn-edit-profile');
+            const btnSaveProfile = document.getElementById('btn-save-profile');
+            const btnCancelProfile = document.getElementById('btn-cancel-profile');
+
+            function renderProfile() {
+                if (displayUsername) displayUsername.innerText = userProfile.username;
+                if (displayEmail) displayEmail.innerText = userProfile.email;
+                if (inputUsername) inputUsername.value = userProfile.username;
+                if (inputEmail) inputEmail.value = userProfile.email;
+                if (inputMobile) inputMobile.value = userProfile.mobile;
+            }
+            renderProfile();
+
+            if (btnEditProfile) {
+                btnEditProfile.addEventListener('click', () => {
+                    inputUsername.disabled = false;
+                    inputEmail.disabled = false;
+                    inputMobile.disabled = false;
+                    btnEditProfile.style.display = 'none';
+                    btnSaveProfile.style.display = 'inline-block';
+                    btnCancelProfile.style.display = 'inline-block';
+                });
+            }
+
+            if (btnCancelProfile) {
+                btnCancelProfile.addEventListener('click', () => {
+                    renderProfile(); // reset inputs
+                    inputUsername.disabled = true;
+                    inputEmail.disabled = true;
+                    inputMobile.disabled = true;
+                    btnEditProfile.style.display = 'inline-block';
+                    btnSaveProfile.style.display = 'none';
+                    btnCancelProfile.style.display = 'none';
+                });
+            }
+
+            const profileForm = document.getElementById('profile-form');
+            if (profileForm) {
+                profileForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    userProfile = {
+                        username: inputUsername.value,
+                        email: inputEmail.value,
+                        mobile: inputMobile.value
+                    };
+                    localStorage.setItem('enerescueProfile', JSON.stringify(userProfile));
+                    renderProfile();
+                    inputUsername.disabled = true;
+                    inputEmail.disabled = true;
+                    inputMobile.disabled = true;
+                    btnEditProfile.style.display = 'inline-block';
+                    btnSaveProfile.style.display = 'none';
+                    btnCancelProfile.style.display = 'none';
+
+                    alert("Profile updated successfully!");
+                });
+            }
+
+            // ── SETTINGS LOGIC ───────────────────────────────────────────
+            const themeToggle = document.getElementById('setting-theme');
+            const unitsToggle = document.getElementById('setting-units');
+            const powerToggle = document.getElementById('setting-widget-power');
+            const batteryToggle = document.getElementById('setting-widget-battery');
+            const alertsToggle = document.getElementById('setting-widget-alerts');
+
+            function loadSettings() {
+                const lightMode = localStorage.getItem('enerescue_light_mode') === 'true';
+                const useF = localStorage.getItem('enerescue_use_f') === 'true';
+                const showPower = localStorage.getItem('enerescue_show_power') !== 'false';
+                const showBattery = localStorage.getItem('enerescue_show_battery') !== 'false';
+                const showAlerts = localStorage.getItem('enerescue_show_alerts') !== 'false';
+
+                if (themeToggle) themeToggle.checked = lightMode;
+                if (unitsToggle) unitsToggle.checked = useF;
+                if (powerToggle) powerToggle.checked = showPower;
+                if (batteryToggle) batteryToggle.checked = showBattery;
+                if (alertsToggle) alertsToggle.checked = showAlerts;
+
+                applySettings();
+            }
+
+            function applySettings() {
+                if (!themeToggle) return;
+
+                // Theme
+                if (themeToggle.checked) {
+                    document.body.classList.add('light-mode');
+                } else {
+                    document.body.classList.remove('light-mode');
+                }
+
+                // Widgets
+                const powerCard = document.getElementById('powerSparkline')?.closest('.gauge-card');
+                const batteryCard = document.getElementById('battery-circle')?.closest('.gauge-card');
+                const alertsCard = document.getElementById('alerts-container')?.closest('.dashboard-panel');
+
+                if (powerCard) powerCard.style.display = powerToggle.checked ? '' : 'none';
+                if (batteryCard) batteryCard.style.display = batteryToggle.checked ? '' : 'none';
+                if (alertsCard) alertsCard.style.display = alertsToggle.checked ? '' : 'none';
+
+                // Update chart text colors
+                const newTextColor = themeToggle.checked ? '#5c6bc0' : themeColors.text;
+                Chart.defaults.color = newTextColor;
+                if (trendsChart && trendsChart.options && trendsChart.options.scales) {
+                    if (trendsChart.options.scales.x && trendsChart.options.scales.x.ticks) {
+                        trendsChart.options.scales.x.ticks.color = newTextColor;
+                    }
+                    if (trendsChart.options.scales.y && trendsChart.options.scales.y.ticks) {
+                        trendsChart.options.scales.y.ticks.color = newTextColor;
+                    }
+                    trendsChart.update('none');
+                }
+            }
+
+            function saveSettings() {
+                if (!themeToggle) return;
+                localStorage.setItem('enerescue_light_mode', themeToggle.checked);
+                localStorage.setItem('enerescue_use_f', unitsToggle.checked);
+                localStorage.setItem('enerescue_show_power', powerToggle.checked);
+                localStorage.setItem('enerescue_show_battery', batteryToggle.checked);
+                localStorage.setItem('enerescue_show_alerts', alertsToggle.checked);
+                applySettings();
+                fetchData(); // re-fetch to apply unit changes immediately
+            }
+
+            if (themeToggle) themeToggle.addEventListener('change', saveSettings);
+            if (unitsToggle) unitsToggle.addEventListener('change', saveSettings);
+            if (powerToggle) powerToggle.addEventListener('change', saveSettings);
+            if (batteryToggle) batteryToggle.addEventListener('change', saveSettings);
+            if (alertsToggle) alertsToggle.addEventListener('change', saveSettings);
+
+            loadSettings();
+        });
+    </script>
+</body>
+
+</html>
